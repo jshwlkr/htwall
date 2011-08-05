@@ -25,3 +25,18 @@ chmod .htaccess files 644
 #	disable directory browsing
 Options All -Indexes
 
+<IfModule mod_rewrite.c>
+ RewriteEngine on 
+ RewriteBase /
+#	block attempts at system files
+ RewriteCond %{QUERY_STRING} (environ(?!ment)|localhost|mosconfig) [NC,OR]
+ RewriteCond %{QUERY_STRING} (etc/passwd|etc%2Fpasswd) [NC,OR]
+ RewriteCond %{QUERY_STRING} boot\.ini [NC,OR]
+#	block attempts at code injections
+ RewriteCond %{QUERY_STRING} (<script>|%3Cscript%3E) [NC,OR]
+#	block attempts at sql injections
+ RewriteCond %{QUERY_STRING} (\'[0-9]\'\s*?=\s*?\'[0-9]\'|\'[0-9]\'\s*?%3D\s*?\'[0-9]\') [NC,OR]
+ RewriteCond %{QUERY_STRING} ([0-9]\s*?=\s*?[0-9]|[0-9]\s*?%3D\s*?[0-9]) [NC,OR]
+ RewriteCond %{QUERY_STRING} \* [NC]
+ RewriteRule .* - [F]
+</IfModule>
