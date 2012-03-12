@@ -21,13 +21,14 @@ Options All -Indexes
  RewriteCond %{QUERY_STRING} boot\.ini [NC,OR]
  #	block attempts at directory traversal
  RewriteCond %{QUERY_STRING} \.\./ [NC,OR]
-# 	attempts at injection testing
+# 	attempts at sql injections
  RewriteCond %{QUERY_STRING} (\=\\%27$|\=\\\'$) [NC,OR]
  RewriteCond %{QUERY_STRING} (\'[0-9]\'\s*?=\s*?\'[0-9]\'|\'[0-9]\'\s*?%3D\s*?\'[0-9]\') [NC,OR]
  RewriteCond %{QUERY_STRING} ([0-9]\s*?=\s*?[0-9]|[0-9]\s*?%3D\s*?[0-9]) [NC,OR]
-#	block attempts at sql injections
+ RewriteCond %{QUERY_STRING} (user%2Bchar%28[0-9]*%29|user%2Bchar\([0-9]*\)|user\+char\([0-9]*\)|user\schar\([0-9]*\)|user%2520char\([0-9]*\)|user%20char\([0-9]*\)) [NC,OR]
+ RewriteCond %{QUERY_STRING} (length\(.*\)|length%28.*%29|len\(.*\)|len%28.*%29) [NC,OR]
  RewriteCond %{QUERY_STRING} \* [NC,OR]
-
+ RewriteCond %{QUERY_STRING} (aND|SELECT|XoR) [OR]
 #	block attempts at script injections
  RewriteCond %{QUERY_STRING} (<script>|%3Cscript%3E) [NC]
  RewriteRule .* - [F]
