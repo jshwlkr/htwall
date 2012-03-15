@@ -15,10 +15,12 @@ Options All -Indexes
 <IfModule mod_rewrite.c>
  RewriteEngine on 
  RewriteBase /
-#	block attempts at system files
+#	block attempts at system files and similar errata
  RewriteCond %{QUERY_STRING} (environ(?!ment)|localhost|mosconfig) [NC,OR]
+ RewriteCond %{QUERY_STRING} (menu|mod|path|tag)\=\.?/? [NC,OR]
  RewriteCond %{QUERY_STRING} (etc/passwd|etc%2Fpasswd) [NC,OR]
  RewriteCond %{QUERY_STRING} boot\.ini [NC,OR]
+ RewriteCond %{QUERY_STRING} echo.*kae [NC,OR]
  #	block attempts at directory traversal
  RewriteCond %{QUERY_STRING} \.\./ [NC,OR]
 # 	attempts at sql injections
@@ -32,4 +34,9 @@ Options All -Indexes
 #	block attempts at script injections
  RewriteCond %{QUERY_STRING} (<script>|%3Cscript%3E) [NC]
  RewriteRule .* - [F]
+#	block questionable request strings
+RedirectMatch 403 (\=\\\'|\=\\%27|/\\\'/?|\)\.css\()$
+
+#	version control security
+RedirectMatch 404 /\\.(svn|git|hg|bzr|cvs)(/|$)
 </IfModule>
