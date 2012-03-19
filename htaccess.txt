@@ -36,7 +36,6 @@ Options All -Indexes
  RewriteRule .* - [F]
 #	block questionable request strings
 RedirectMatch 403 (\=\\\'|\=\\%27|/\\\'/?|\)\.css\()$
-
 #	version control security
-RedirectMatch 404 /\\.(svn|git|hg|bzr|cvs)(/|$)
+RedirectMatch 403 /\\.(svn|git|hg|bzr|cvs)(/|$)
 </IfModule>
