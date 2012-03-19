@@ -1,41 +1,25 @@
-
-
 #	block access to the .htaccess file
 <Files .htaccess>
  Order Allow,Deny
  Deny from all
 </Files>
 
-#	ensure the .htaccess file has the correcy CHMOD settings
-chmod .htaccess files 644
-
 #	disable directory browsing
-Options All -Indexes
+IndexIgnore *
 
 <IfModule mod_rewrite.c>
  RewriteEngine on 
  RewriteBase /
+
 #	block attempts at system files and similar errata
  RewriteCond %{QUERY_STRING} (environ(?!ment)|localhost|mosconfig) [NC,OR]
  RewriteCond %{QUERY_STRING} (menu|mod|path|tag)\=\.?/? [NC,OR]
  RewriteCond %{QUERY_STRING} (etc/passwd|etc%2Fpasswd) [NC,OR]
  RewriteCond %{QUERY_STRING} boot\.ini [NC,OR]
- RewriteCond %{QUERY_STRING} echo.*kae [NC,OR]
- #	block attempts at directory traversal
- RewriteCond %{QUERY_STRING} \.\./ [NC,OR]
-# 	attempts at sql injections
- RewriteCond %{QUERY_STRING} (\=\\%27$|\=\\\'$) [NC,OR]
- RewriteCond %{QUERY_STRING} (\'[0-9]\'\s*?=\s*?\'[0-9]\'|\'[0-9]\'\s*?%3D\s*?\'[0-9]\') [NC,OR]
- RewriteCond %{QUERY_STRING} ([0-9]\s*?=\s*?[0-9]|[0-9]\s*?%3D\s*?[0-9]) [NC,OR]
- RewriteCond %{QUERY_STRING} (user%2Bchar%28[0-9]*%29|user%2Bchar\([0-9]*\)|user\+char\([0-9]*\)|user\schar\([0-9]*\)|user%2520char\([0-9]*\)|user%20char\([0-9]*\)) [NC,OR]
- RewriteCond %{QUERY_STRING} (length\(.*\)|length%28.*%29|len\(.*\)|len%28.*%29) [NC,OR]
- RewriteCond %{QUERY_STRING} \* [NC,OR]
- RewriteCond %{QUERY_STRING} (aND|SELECT|XoR) [OR]
-#	block attempts at script injections
- RewriteCond %{QUERY_STRING} (<script>|%3Cscript%3E) [NC]
+ RewriteCond %{QUERY_STRING} echo.*kae [NC]
  RewriteRule .* - [F]
-#	block questionable request strings
-RedirectMatch 403 (\=\\\'|\=\\%27|/\\\'/?|\)\.css\()$
-#	version control security
-RedirectMatch 403 /\\.(svn|git|hg|bzr|cvs)(/|$)
+
+#	deny access to hidden files
+RedirectMatch 403 /\..*$
+
 </IfModule>
