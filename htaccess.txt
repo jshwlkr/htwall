@@ -10,16 +10,25 @@ IndexIgnore *
 <IfModule mod_rewrite.c>
  RewriteEngine on 
  RewriteBase /
-
-#	block attempts at system files and similar errata
+#	block attempts at system files, functions, and similar errata
  RewriteCond %{QUERY_STRING} (environ(?!ment)|localhost|mosconfig) [NC,OR]
  RewriteCond %{QUERY_STRING} (menu|mod|path|tag)\=\.?/? [NC,OR]
  RewriteCond %{QUERY_STRING} (etc/passwd|etc%2Fpasswd) [NC,OR]
  RewriteCond %{QUERY_STRING} boot\.ini [NC,OR]
- RewriteCond %{QUERY_STRING} echo.*kae [NC]
+ RewriteCond %{QUERY_STRING} echo.*kae [NC,OR]
+ RewriteCond %{QUERY_STRING} (length\(.*\)|length%28.*%29|len\(.*\)|len%28.*%29) [NC,OR]
+ #	block attempts at directory traversal
+ RewriteCond %{QUERY_STRING} \.\./ [NC,OR]
+# 	attempts at sql injections and injection testing
+ RewriteCond %{QUERY_STRING} (\\\s*?=\s*?\\\\|%5C(%20)*?%3D(%20)*?%5C%5C) [NC,OR]
+ RewriteCond %{QUERY_STRING} (\'[0-9]\'\s*?=\s*?\'[0-9]\'|\'[0-9]\'\s*?%3D\s*?\'[0-9]\') [NC,OR]
+ RewriteCond %{QUERY_STRING} ([0-9]\s*?=\s*?[0-9]|[0-9]\s*?%3D\s*?[0-9]) [NC,OR]
+ RewriteCond %{QUERY_STRING} (user%2Bchar%28[0-9]*%29|user%2Bchar\([0-9]*\)|user\+char\([0-9]*\)|user\schar\([0-9]*\)|user%2520char\([0-9]*\)|user%20char\([0-9]*\)) [NC,OR]
+ RewriteCond %{QUERY_STRING} \* [NC,OR]
+ RewriteCond %{QUERY_STRING} (aND|SELECT|XoR) [OR]
+#	block attempts at script injections
+ RewriteCond %{QUERY_STRING} (<script>|%3Cscript%3E) [NC]
  RewriteRule .* - [F]
-
-#	deny access to hidden files
-RedirectMatch 403 /\..*$
-
+#	block access to hidden files, folders, version control, etc
+ RedirectMatch 403 /\..*$
 </IfModule>
