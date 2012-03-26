@@ -29,6 +29,16 @@ IndexIgnore *
 #	block attempts at script injections
  RewriteCond %{QUERY_STRING} (<script>|%3Cscript%3E) [NC]
  RewriteRule .* - [F]
+</IfModule>
+
+<IfModule mod_alias.c>
+ RedirectMatch 403 (https?|ftp|php)\://
+ RedirectMatch 403 /(cgi|https?|ima|ucp)/
+ RedirectMatch 403 \.(cgi|asp|aspx|cfg|dll|exe|jsp|mdb|sql|ini|rar)$
+ RedirectMatch 403 /(contac(?!t)|fpw|install|pingserver|trackback)\.php
+ RedirectMatch 403 (base64|crossdomain|localhost|wwwroot)
+ RedirectMatch 403 (eval\(|\_vti\_|\(null\))
+
 #	block access to hidden files, folders, version control, etc
  RedirectMatch 403 /\..*$
 </IfModule>
