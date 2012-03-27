@@ -24,7 +24,7 @@ IndexIgnore *
  RewriteCond %{QUERY_STRING} (\'[0-9]\'\s*?=\s*?\'[0-9]\'|\'[0-9]\'\s*?%3D\s*?\'[0-9]\') [NC,OR]
  RewriteCond %{QUERY_STRING} ([0-9]\s*?=\s*?[0-9]|[0-9]\s*?%3D\s*?[0-9]) [NC,OR]
  RewriteCond %{QUERY_STRING} (user%2Bchar%28[0-9]*%29|user%2Bchar\([0-9]*\)|user\+char\([0-9]*\)|user\schar\([0-9]*\)|user%2520char\([0-9]*\)|user%20char\([0-9]*\)) [NC,OR]
- RewriteCond %{QUERY_STRING} \* [NC,OR]
+ RewriteCond %{QUERY_STRING} (\*|\[|\]|\:) [NC,OR]
  RewriteCond %{QUERY_STRING} (aND|SELECT|XoR) [OR]
 #	block attempts at script injections
  RewriteCond %{QUERY_STRING} (<script>|%3Cscript%3E) [NC]
@@ -32,6 +32,7 @@ IndexIgnore *
 </IfModule>
 
 <IfModule mod_alias.c>
+# block attempts at server pecularities, javascript, file errata, etc.
  RedirectMatch 403 (https?|ftp|php)\://
  RedirectMatch 403 /(cgi|https?|ima|ucp)/
  RedirectMatch 403 \.(cgi|asp|aspx|cfg|dll|exe|jsp|mdb|sql|ini|rar)$
