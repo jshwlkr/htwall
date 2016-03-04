@@ -6,4 +6,4 @@ Visit the wiki for more information and guidelines on contributing to htwall.
 
 Development of htwall has ended, support for htwall is nonexistent (but the wiki may help you if you run into problems).
 
-[![http://codeology.braintreepayments.com/jshwlkr/htwall](https://github.com/jshwlkr/hacka2/blob/master/gif-jshwlkr-htwall.gif)](http://codeology.braintreepayments.com/jshwlkr/htwall)
+[![http://codeology.braintreepayments.com/jshwlkr/htwall](https://github.com/jshwlkr/htwall/blob/master/gif-jshwlkr-htwall.gif)](http://codeology.braintreepayments.com/jshwlkr/htwall)
